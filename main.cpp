@@ -1,49 +1,60 @@
 #include <iostream>
+// GLEW
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
-
-using namespace std;
-
 #include <SFML/Graphics.hpp>
+
+#include <fstream>
+#include "utils/file_reader.hh"
+
 
 int main()
 {
-  // crée la fenêtre
-  sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
-  window.setVerticalSyncEnabled(true);
-
-  // chargement des ressources, initialisation des états OpenGL, ...
-
-  // la boucle principale
-  bool running = true;
-  while (running)
-  {
-    // gestion des évènements
-    sf::Event event;
-    while (window.pollEvent(event))
-    {
-      if (event.type == sf::Event::Closed)
-      {
-        // on stoppe le programme
-        running = false;
-      }
-      else if (event.type == sf::Event::Resized)
-      {
-        // on ajuste le viewport lorsque la fenêtre est redimensionnée
-        glViewport(0, 0, event.size.width, event.size.height);
-      }
-    }
-
-    // effacement les tampons de couleur/profondeur
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // dessin...
-
-    // termine la trame courante (en interne, échange les deux tampons de rendu)
-    window.display();
+  // Creating window
+  sf::Window *window = new sf::Window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Default, sf::ContextSettings(32));
+  window->setVerticalSyncEnabled(true);
+  if (glewInit() == GLEW_OK)
+    std::cout << "Glew initialized successfully" << std::endl;
+  // We create a VBO
+  GLfloat vertices[] = {
+      -0.5f, -0.5f, 0.0f,
+      0.5f, -0.5f, 0.0f,
+      0.0f, 0.5f, 0.0f,
+  };
+  GLuint VBO; // Vertex Buffer Object
+  glGenBuffers(1, &VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  // We create a vertex shader
+  std::string str = file_reader::readFile("hello_triangle.glsl");
+  const GLchar *vertexShaderSource = str.c_str();
+  std::cout << vertexShaderSource << std::endl;
+  GLuint vertexShader;
+  vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  // Checking for compilation errors
+  GLint success;
+  GLchar infolog[512];
+  int bufflen = 0;
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &bufflen);
+  if (success != GL_TRUE) {
+    glGetShaderInfoLog(vertexShader, 512, NULL, infolog);
+    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
+      << infolog << std::endl;
   }
-
-  // libération des ressources...
-
+  bool running = true;
+  while (running) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    sf::Event event;
+    while (window->pollEvent(event))
+      if (event.type == sf::Event::Closed)
+        running = false;
+    window->display();
+  }
+  delete window;
   return 0;
 }
