@@ -29,6 +29,8 @@ int main()
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   // We create a vertex shader
+  printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
+  printf("GLSL version is (%s)\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
   std::string str = file_reader::readFile("hello_triangle.glsl");
   const GLchar *vertexShaderSource = str.c_str();
   std::cout << vertexShaderSource << std::endl;
