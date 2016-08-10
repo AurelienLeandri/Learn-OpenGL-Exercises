@@ -31,9 +31,8 @@ int main()
   // We create a vertex shader
   printf("OpenGL version is (%s)\n", glGetString(GL_VERSION));
   printf("GLSL version is (%s)\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-  std::string str = file_reader::readFile("hello_triangle.glsl");
+  std::string str = file_reader::readFile("hello_triangle_vertex.glsl");
   const GLchar *vertexShaderSource = str.c_str();
-  std::cout << vertexShaderSource << std::endl;
   GLuint vertexShader;
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -41,6 +40,7 @@ int main()
   GLint success;
   GLchar infolog[512];
   int bufflen = 0;
+  glCompileShader(vertexShader);
   glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
   glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &bufflen);
   if (success != GL_TRUE) {
