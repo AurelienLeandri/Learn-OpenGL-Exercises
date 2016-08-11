@@ -25,6 +25,10 @@ include_directories(${GLEW_INCLUDE_DIRS})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp utils/file_reader.cc utils/file_reader.hh utils/shader_compiler.cc utils/shader_compiler.hh)
-add_executable(tuto1 ${SOURCE_FILES})
-target_link_libraries(tuto1; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
+set(UTILS_SOURCE_FILES utils/file_reader.cc utils/file_reader.hh utils/shader_compiler.cc utils/shader_compiler.hh)
+set(TUTO_SOURCE_FILES main.cpp)
+set(EX1_SOURCE_FILES exo1/main.cc)
+add_executable(tuto ${TUTO_SOURCE_FILES} ${UTILS_SOURCE_FILES})
+add_executable(ex1 ${EX1_SOURCE_FILES} ${UTILS_SOURCE_FILES})
+target_link_libraries(tuto; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
+target_link_libraries(ex1; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
