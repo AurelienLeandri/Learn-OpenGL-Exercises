@@ -3,5 +3,5 @@ project(tuto2)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES tuto/main.cc)
 add_executable(tuto2 ${SOURCE_FILES})
