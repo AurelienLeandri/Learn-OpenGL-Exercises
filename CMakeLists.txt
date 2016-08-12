@@ -29,11 +29,14 @@ set(UTILS_SOURCE_FILES utils/file_reader.cc utils/file_reader.hh utils/shader_co
 set(TUTO_SOURCE_FILES main.cpp)
 set(EX1_SOURCE_FILES exo1/main.cc)
 set(EX2_SOURCE_FILES exo2/main.cc)
+set(EX3_SOURCE_FILES exo3/main.cc)
 
 add_executable(tuto ${TUTO_SOURCE_FILES} ${UTILS_SOURCE_FILES})
 add_executable(ex1 ${EX1_SOURCE_FILES} ${UTILS_SOURCE_FILES})
 add_executable(ex2 ${EX2_SOURCE_FILES} ${UTILS_SOURCE_FILES})
+add_executable(ex3 ${EX3_SOURCE_FILES} ${UTILS_SOURCE_FILES})
 
 target_link_libraries(tuto; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
 target_link_libraries(ex1; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
 target_link_libraries(ex2; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
+target_link_libraries(ex3; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
