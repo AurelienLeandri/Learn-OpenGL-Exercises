@@ -57,19 +57,34 @@ int main()
   glBindVertexArray(0);
   GLuint vertexShader = shader_compiler::compile("hello_triangle_vertex.glsl",
     GL_VERTEX_SHADER);
-  GLuint fragmentShader = shader_compiler::compile("hello_triangle_fragment.glsl",
+  GLuint fragmentShader1 = shader_compiler::compile("hello_triangle_fragment_orange.glsl",
                                                  GL_FRAGMENT_SHADER);
-  GLuint shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
+  GLuint fragmentShader2 = shader_compiler::compile("hello_triangle_fragment_yellow.glsl",
+                                                   GL_FRAGMENT_SHADER);
+  GLuint shaderProgram1 = glCreateProgram();
+  glAttachShader(shaderProgram1, vertexShader);
+  glAttachShader(shaderProgram1, fragmentShader1);
+  glLinkProgram(shaderProgram1);
   glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  glDeleteShader(fragmentShader1);
   GLint success;
   GLchar infolog[512];
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  glGetProgramiv(shaderProgram1, GL_LINK_STATUS, &success);
   if (success != GL_TRUE) {
-    glGetShaderInfoLog(shaderProgram, 512, NULL, infolog);
+    glGetShaderInfoLog(shaderProgram1, 512, NULL, infolog);
+    std::cout << "ERROR::PROGRAM::LINK::LINKING_FAILED\n"
+    << infolog << std::endl;
+    return 0;
+  }
+  GLuint shaderProgram2 = glCreateProgram();
+  glAttachShader(shaderProgram2, vertexShader);
+  glAttachShader(shaderProgram2, fragmentShader2);
+  glLinkProgram(shaderProgram2);
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader2);
+  glGetProgramiv(shaderProgram2, GL_LINK_STATUS, &success);
+  if (success != GL_TRUE) {
+    glGetShaderInfoLog(shaderProgram2, 512, NULL, infolog);
     std::cout << "ERROR::PROGRAM::LINK::LINKING_FAILED\n"
     << infolog << std::endl;
     return 0;
@@ -81,11 +96,11 @@ int main()
     while (window->pollEvent(event))
       if (event.type == sf::Event::Closed)
         running = false;
-    glUseProgram(shaderProgram);
+    glUseProgram(shaderProgram1);
     glBindVertexArray(VAO1);
       glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
-    glUseProgram(shaderProgram);
+    glUseProgram(shaderProgram2);
     glBindVertexArray(VAO2);
       glDrawArrays(GL_TRIANGLES, 3, 3);
     glBindVertexArray(0);
