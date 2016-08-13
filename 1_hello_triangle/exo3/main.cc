@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <fstream>
-#include "../utils/shader_compiler.hh"
+#include "../../utils/shader_compiler.hh"
 
 void print_info();
 
