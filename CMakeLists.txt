@@ -24,5 +24,6 @@ include_directories(${GLEW_INCLUDE_DIRS})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+include_directories(. utils)
 add_subdirectory(1_hello_triangle)
 add_subdirectory(2_shaders)
