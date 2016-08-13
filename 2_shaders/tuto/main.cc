@@ -44,8 +44,8 @@ int main()
     glEnableVertexAttribArray(0);
   glBindVertexArray(0);
   // We create a vertex shader
-  GLuint vertexShader = shader_compiler::compile("hello_triangle_vertex.glsl", GL_VERTEX_SHADER);
-  GLuint fragmentShader = shader_compiler::compile("hello_triangle_fragment_orange.glsl", GL_FRAGMENT_SHADER);
+  GLuint vertexShader = shader_compiler::compile("tuto/shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
+  GLuint fragmentShader = shader_compiler::compile("tuto/shaders/fragment_shader.glsl", GL_FRAGMENT_SHADER);
   GLuint shaderProgram;
   shaderProgram = glCreateProgram();
   glAttachShader(shaderProgram, vertexShader);
