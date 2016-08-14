@@ -1,9 +1,9 @@
 #version 450 core
 
-in vec4 color_vertex;
+uniform vec4 uni_color;
 
 out vec4 color_out;
 
 void main() {
-    color_out = color_vertex;
+    color_out = uni_color;
 }

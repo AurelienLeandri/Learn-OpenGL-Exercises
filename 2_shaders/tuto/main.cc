@@ -54,6 +54,7 @@ int main()
     return 0;
   }
   bool running = true;
+  sf::Clock *clock = new sf::Clock();
   while (running) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sf::Event event;
@@ -61,11 +62,16 @@ int main()
       if (event.type == sf::Event::Closed)
         running = false;
     glUseProgram(shaderProgram);
+    GLfloat  timeValue = clock->getElapsedTime().asSeconds();
+    GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
+    GLint vertexUniLocation = glGetUniformLocation(shaderProgram, "uni_color");
+    glUniform4f(vertexUniLocation, 0.0f, greenValue, 0.0f, 1.0f);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
     window->display();
   }
+  delete clock;
   delete window;
   return 0;
 }
