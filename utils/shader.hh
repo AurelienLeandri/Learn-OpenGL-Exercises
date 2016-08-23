@@ -21,7 +21,7 @@ class Shader {
     void Use();
     GLuint &getProgram();
   private:
-    void compileShader(GLuint &shader, const GLchar *shaderCode);
+    void compileShader(GLuint &shader, const GLchar *shaderCode, GLint shaderType);
 };
 
 
