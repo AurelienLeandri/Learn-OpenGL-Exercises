@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <fstream>
+#include <utils/shader.hh>
 #include "../utils/shader_compiler.hh"
 
 int main()
@@ -34,25 +35,9 @@ int main()
                           (GLvoid*)0);
     glEnableVertexAttribArray(0);
   glBindVertexArray(0);
+  Shader shader("tuto/shaders/vertex_shader.glsl",
+                "tuto/shaders/fragment_shader.glsl");
   // We create a vertex shader
-  GLuint vertexShader = shader_compiler::compile("tuto/shaders/vertex_shader.glsl", GL_VERTEX_SHADER);
-  GLuint fragmentShader = shader_compiler::compile("tuto/shaders/fragment_shader.glsl", GL_FRAGMENT_SHADER);
-  GLuint shaderProgram;
-  shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-  GLint success;
-  GLchar infolog[512];
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if (success != GL_TRUE) {
-    glGetShaderInfoLog(shaderProgram, 512, NULL, infolog);
-    std::cout << "ERROR::PROGRAM::LINK::LINKING_FAILED\n"
-    << infolog << std::endl;
-    return 0;
-  }
   bool running = true;
   sf::Clock *clock = new sf::Clock();
   while (running) {
@@ -61,10 +46,11 @@ int main()
     while (window->pollEvent(event))
       if (event.type == sf::Event::Closed)
         running = false;
-    glUseProgram(shaderProgram);
+    shader.Use();
     GLfloat  timeValue = clock->getElapsedTime().asSeconds();
     GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
-    GLint vertexUniLocation = glGetUniformLocation(shaderProgram, "uni_color");
+    GLint vertexUniLocation = glGetUniformLocation(
+        shader.getProgram(), "uni_color");
     glUniform4f(vertexUniLocation, 0.0f, greenValue, 0.0f, 1.0f);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);

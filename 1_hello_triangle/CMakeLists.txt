@@ -4,7 +4,7 @@ project(1_hello_triangle)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/1_hello_triangle)
 
 set(UTILS_SOURCE_FILES ../utils/file_reader.cc ../utils/file_reader.hh
-        ../utils/shader_compiler.cc ../utils/shader_compiler.hh)
+        ../utils/shader_compiler.cc ../utils/shader_compiler.hh ../utils/shader.cc ../utils/shader.hh)
 set(TUTO_SOURCE_FILES main.cpp)
 set(EX1_SOURCE_FILES exo1/main.cc)
 set(EX2_SOURCE_FILES exo2/main.cc)
