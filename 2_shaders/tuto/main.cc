@@ -34,8 +34,8 @@ int main()
                           (GLvoid*)0);
     glEnableVertexAttribArray(0);
   glBindVertexArray(0);
-  Shader shader("tuto/shaders/vertex_shader.glsl",
-                "tuto/shaders/fragment_shader.glsl");
+  Shader shader("tuto/shaders/vertex_shader_ex3.glsl",
+                "tuto/shaders/fragment_shader_ex3.glsl");
   // We create a vertex shader
   bool running = true;
   sf::Clock *clock = new sf::Clock();
