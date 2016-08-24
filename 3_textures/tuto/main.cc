@@ -21,6 +21,14 @@ int main()
       0.0f, 0.5f, 0.0f,
       0.5f, -0.5f, 0.0f,
   };
+  GLfloat textureCoords[] = {
+      0.0, 0.0f,
+      1.0f, 0.0f,
+      0.5f, 1.0f
+  };
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                  GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   // VAO use
   GLuint VAO;
   glGenVertexArrays(1, &VAO);
