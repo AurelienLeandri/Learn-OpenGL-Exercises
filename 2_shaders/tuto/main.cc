@@ -6,8 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <fstream>
-#include <utils/shader.hh>
-#include "../utils/shader_compiler.hh"
+#include <shader.hh>
 
 int main()
 {
