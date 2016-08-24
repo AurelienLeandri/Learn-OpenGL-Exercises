@@ -50,7 +50,10 @@ int main()
     GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
     GLint vertexUniLocation = glGetUniformLocation(
         shader.getProgram(), "uni_color");
+    GLint vHorizontalOffset = glGetUniformLocation(
+        shader.getProgram(), "horizontalOffset");
     glUniform4f(vertexUniLocation, 0.0f, greenValue, 0.0f, 1.0f);
+    glUniform1f(vHorizontalOffset, 0.5f);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);
