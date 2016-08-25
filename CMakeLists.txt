@@ -22,6 +22,12 @@ if (!OPENGL_FOUND)
 endif()
 include_directories(${GLEW_INCLUDE_DIRS})
 
+find_package(SOIL REQUIRED)
+if (!SOIL_FOUND)
+    MESSAGE("SOIL NOT FOUND")
+endif()
+include_directories(${SOIL_INCLUDE_DIRS})
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(UTILS_DIR ${CMAKE_SOURCE_DIR}/utils)

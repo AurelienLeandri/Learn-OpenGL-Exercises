@@ -9,4 +9,4 @@ set(TUTO_SOURCE_FILES tuto/main.cc)
 
 add_executable(textures ${TUTO_SOURCE_FILES} ${UTILS_SOURCE_FILES})
 
-target_link_libraries(textures; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; GL)
+target_link_libraries(textures; ${SFML_LIBRARIES}; ${GLEW_LIBRARIES}; ${SOIL_LIBRARIES}; GL)
