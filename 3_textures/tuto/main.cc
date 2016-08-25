@@ -27,14 +27,15 @@ int main()
       -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
       -0.5f, 0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // Top Left
   };
-  GLfloat textureCoords[] = {
-      0.0, 0.0f,
-      1.0f, 0.0f,
-      0.5f, 1.0f
+  GLuint indices[] = {
+      0, 1, 3,
+      1, 2, 3
   };
   int width, height;
-  unsigned char *image = SOIL_load_image("../../resources/textures/texture_test.png",
+  unsigned char *image = SOIL_load_image("../resources/textures/texture_test.png",
                                          &width, &height, 0, SOIL_LOAD_RGB);
+  if (!image)
+    std::cerr << "Cannot load image" << std::endl;
   GLuint texture;
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
@@ -46,6 +47,8 @@ int main()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                   GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  GLuint EBO;
+  glGenBuffers(1, &EBO);
   // VAO use
   GLuint VAO;
   glGenVertexArrays(1, &VAO);
@@ -57,7 +60,9 @@ int main()
     glBufferData(GL_ARRAY_BUFFER, sizeof (vertices), vertices, GL_STATIC_DRAW);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof (GL_FLOAT),
                           (GLvoid*)(6 * sizeof (GLfloat)));
-    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(2);
   glBindVertexArray(0);
   Shader shader("tuto/shaders/vertex_shader.glsl",
                 "tuto/shaders/fragment_shader.glsl");
@@ -70,9 +75,11 @@ int main()
       if (event.type == sf::Event::Closed)
         running = false;
     shader.Use();
+    glBindTexture(GL_TEXTURE_2D, texture);
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
     window->display();
   }
   delete window;

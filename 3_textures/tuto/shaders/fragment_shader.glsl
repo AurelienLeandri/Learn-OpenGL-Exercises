@@ -1,9 +1,12 @@
 #version 450 core
 
-uniform vec4 uni_color;
+uniform sampler2D uTexture;
 
-out vec4 color_out;
+in vec3 vColor;
+in vec2 vTexCoord;
+
+out vec4 fColor;
 
 void main() {
-    color_out = uni_color;
+    fColor = texture(uTexture, vTexCoord);
 }
