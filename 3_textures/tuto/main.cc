@@ -31,6 +31,8 @@ int main()
       0, 1, 3,
       1, 2, 3
   };
+  Shader shader("tuto/shaders/vertex_shader.glsl",
+                "tuto/shaders/fragment_shader.glsl");
   int width, height;
   unsigned char *image = SOIL_load_image("../resources/textures/texture_test.png",
                                          &width, &height, 0, SOIL_LOAD_RGB);
@@ -43,7 +45,18 @@ int main()
                  GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  int width2, height2;
+  unsigned char *image2 = SOIL_load_image("../resources/textures/texture_test2.png",
+                                          &width2, &height2, 0, SOIL_LOAD_RGB);
+  if (!image2)
+    std::cerr << "Cannot load image2" << std::endl;
+  GLuint texture2;
+  glGenTextures(1, &texture2);
+  glBindTexture(GL_TEXTURE_2D, texture2);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width2, height2, 0, GL_RGB,
+               GL_UNSIGNED_BYTE, image2);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  SOIL_free_image_data(image2);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                   GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -61,7 +74,7 @@ int main()
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat),
-                        (GLvoid*)(0 * sizeof (GLfloat)));
+                        (GLvoid*)0);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof (GLfloat),
                         (GLvoid*)(3 * sizeof (GLfloat)));
@@ -70,8 +83,6 @@ int main()
                         (GLvoid*)(6 * sizeof (GLfloat)));
   glEnableVertexAttribArray(2);
   glBindVertexArray(0);
-  Shader shader("tuto/shaders/vertex_shader.glsl",
-                "tuto/shaders/fragment_shader.glsl");
   // We create a vertex shader
   bool running = true;
   while (running) {
@@ -81,11 +92,15 @@ int main()
       if (event.type == sf::Event::Closed)
         running = false;
     shader.Use();
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glActiveTexture(GL_TEXTURE0); // activate texture unit 0
+    glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
+    glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture"), 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture2"), 1);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
     window->display();
   }
   delete window;
