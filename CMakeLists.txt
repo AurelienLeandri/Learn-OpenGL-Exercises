@@ -28,6 +28,16 @@ if (!SOIL_FOUND)
 endif()
 include_directories(${SOIL_INCLUDE_DIRS})
 
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(GLM DEFAULT_MSG GLM_INCLUDE_DIR)
+# Define GLM_INCLUDE_DIRS
+if (GLM_FOUND)
+    set(GLM_INCLUDE_DIRS ${GLM_INCLUDE_DIR})
+endif()
+
+# Hide some variables
+mark_as_advanced(GLM_INCLUDE_DIR)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(UTILS_DIR ${CMAKE_SOURCE_DIR}/utils)
@@ -35,3 +45,4 @@ include_directories(${UTILS_DIR})
 add_subdirectory(1_hello_triangle)
 add_subdirectory(2_shaders)
 add_subdirectory(3_textures)
+add_subdirectory(4_transformations)
