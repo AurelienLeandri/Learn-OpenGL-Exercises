@@ -11,6 +11,6 @@ vec2 vTexCoordFlip;
 out vec4 fColor;
 
 void main() {
-    fColor = mix(texture(uTexture, vec2(vTexCoord.x, 1.0f - vTexCoord.y)),
+    fColor = mix(texture(uTexture, vec2(vTexCoord.x, vTexCoord.y)),
         texture(uTexture2, vTexCoord), 0.2);
 }
