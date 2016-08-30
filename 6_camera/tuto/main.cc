@@ -81,10 +81,14 @@ int main()
       glm::vec3( 1.5f,  0.2f, -1.5f),
       glm::vec3(-1.3f,  1.0f, -1.5f)
   };
+  glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+  glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+  glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+  glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
   //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  glm::mat4 view;
 // Note that we're translating the scene in the reverse direction of where we want to move
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   glm::mat4 projection;
   projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
   Shader shader("tuto/shaders/vertex_shader.glsl",
@@ -150,7 +154,6 @@ int main()
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
     GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
     GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     GLint projLoc = glGetUniformLocation(shader.getProgram(), "projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture"), 0);
@@ -158,6 +161,11 @@ int main()
     glBindTexture(GL_TEXTURE_2D, texture2);
     glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture2"), 1);
     glBindVertexArray(VAO);
+    GLfloat radius = 10.0f;
+    GLfloat camX = (GLfloat)(sin(clock.getElapsedTime().asSeconds())) * radius;
+    GLfloat camZ = (GLfloat)(cos(clock.getElapsedTime().asSeconds())) * radius;
+    glm::mat4 view;
+    view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
     for(GLuint i = 0; i < 10; i++)
     {
       glm::mat4 model;
@@ -165,12 +173,12 @@ int main()
       GLfloat angle = 20.0f * i;
       model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
       glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+      glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
       glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     }
     glBindVertexArray(0);
     window->display();
-    clock.restart();
   }
   delete window;
   return 0;
