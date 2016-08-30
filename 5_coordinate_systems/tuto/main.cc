@@ -16,12 +16,11 @@
 
 int main()
 {
-  //GLM USE to rotate and scale the container
-
   // Creating window
   sf::Window *window = new sf::Window(sf::VideoMode(800, 600), "OpenGL",
                                       sf::Style::Default, sf::ContextSettings(32));
   window->setVerticalSyncEnabled(true);
+  glEnable(GL_DEPTH_TEST);
   if (glewInit() == GLEW_OK)
     std::cout << "Glew initialized successfully" << std::endl;
   // We create a VBO
