@@ -36,6 +36,13 @@ int main()
       0, 1, 3,
       1, 2, 3
   };
+  glm::mat4 model;
+  model = glm::rotate(model, -55.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+  glm::mat4 view;
+// Note that we're translating the scene in the reverse direction of where we want to move
+  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  glm::mat4 projection;
+  projection = glm::perspective(glm::radians(45.0f), 800 / 600, 0.1f, 100.0f);
   Shader shader("tuto/shaders/vertex_shader.glsl",
                 "tuto/shaders/fragment_shader.glsl");
   int width, height;
