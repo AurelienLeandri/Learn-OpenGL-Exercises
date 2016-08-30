@@ -71,7 +71,7 @@ int main()
       21, 22, 23
   };
   glm::mat4 model;
-  model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   glm::mat4 view;
 // Note that we're translating the scene in the reverse direction of where we want to move
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -138,6 +138,7 @@ int main()
     shader.Use();
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
+    model = glm::rotate(model, glm::radians(clock.getElapsedTime().asSeconds() * 4000.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");
