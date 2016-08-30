@@ -37,12 +37,12 @@ int main()
       1, 2, 3
   };
   glm::mat4 model;
-  model = glm::rotate(model, -55.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+  model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   glm::mat4 view;
 // Note that we're translating the scene in the reverse direction of where we want to move
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   glm::mat4 projection;
-  projection = glm::perspective(glm::radians(45.0f), 800 / 600, 0.1f, 100.0f);
+  projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
   Shader shader("tuto/shaders/vertex_shader.glsl",
                 "tuto/shaders/fragment_shader.glsl");
   int width, height;
@@ -107,6 +107,12 @@ int main()
     shader.Use();
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
+    GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    GLint projLoc = glGetUniformLocation(shader.getProgram(), "projection");
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
     glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture"), 0);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
