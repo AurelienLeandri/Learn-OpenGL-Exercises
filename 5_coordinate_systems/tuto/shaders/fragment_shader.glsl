@@ -3,7 +3,6 @@
 uniform sampler2D uTexture;
 uniform sampler2D uTexture2;
 
-in vec3 vColor;
 in vec2 vTexCoord;
 
 vec2 vTexCoordFlip;
