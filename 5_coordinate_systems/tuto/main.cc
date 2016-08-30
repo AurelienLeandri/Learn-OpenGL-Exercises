@@ -163,14 +163,14 @@ int main()
       glm::mat4 model;
       model = glm::translate(model, cubePositions[i]);
       GLfloat angle = 20.0f * i;
-      model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+      if (i % 3 == 0)
+        model = glm::rotate(model, glm::radians(clock.getElapsedTime().asSeconds() * 100), glm::vec3(1.0f, 0.3f, 0.5f));
       glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
       glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     }
     glBindVertexArray(0);
     window->display();
-    clock.restart();
   }
   delete window;
   return 0;
