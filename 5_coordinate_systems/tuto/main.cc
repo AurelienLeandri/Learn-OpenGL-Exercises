@@ -69,7 +69,18 @@ int main()
       20, 21, 23,
       21, 22, 23
   };
-  glm::mat4 model;
+  glm::vec3 cubePositions[] = {
+      glm::vec3( 0.0f,  0.0f,  0.0f),
+      glm::vec3( 2.0f,  5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f),
+      glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3( 2.4f, -0.4f, -3.5f),
+      glm::vec3(-1.7f,  3.0f, -7.5f),
+      glm::vec3( 1.3f, -2.0f, -2.5f),
+      glm::vec3( 1.5f,  2.0f, -2.5f),
+      glm::vec3( 1.5f,  0.2f, -1.5f),
+      glm::vec3(-1.3f,  1.0f, -1.5f)
+  };
   //model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   glm::mat4 view;
 // Note that we're translating the scene in the reverse direction of where we want to move
@@ -137,9 +148,7 @@ int main()
     shader.Use();
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
-    model = glm::rotate(model, glm::radians(clock.getElapsedTime().asSeconds() * 4000.0f), glm::vec3(0.5f, 1.0f, 0.0f));
     GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
     GLint projLoc = glGetUniformLocation(shader.getProgram(), "projection");
@@ -149,7 +158,16 @@ int main()
     glBindTexture(GL_TEXTURE_2D, texture2);
     glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture2"), 1);
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    for(GLuint i = 0; i < 10; i++)
+    {
+      glm::mat4 model;
+      model = glm::translate(model, cubePositions[i]);
+      GLfloat angle = 20.0f * i;
+      model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+      glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    }
     glBindVertexArray(0);
     window->display();
     clock.restart();
