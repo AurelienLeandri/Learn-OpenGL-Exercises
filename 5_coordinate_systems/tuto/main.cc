@@ -17,9 +17,6 @@
 int main()
 {
   //GLM USE to rotate and scale the container
-  glm::mat4 trans;
-  trans = glm::translate(trans, glm::vec3(0.5, -0.5, 0.0));
-  trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
   // Creating window
   sf::Window *window = new sf::Window(sf::VideoMode(800, 600), "OpenGL",
@@ -104,9 +101,6 @@ int main()
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
     glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture"), 0);
-    trans = glm::rotate(trans, glm::radians(clock.getElapsedTime().asSeconds() * 3600.0f), glm::vec3(0.0, 0.0, 1.0));
-    GLint transformLoc = glGetUniformLocation(shader.getProgram(), "trans");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
     glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture2"), 1);
