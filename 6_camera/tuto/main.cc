@@ -14,6 +14,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront);
+
 int main()
 {
   // Creating window
@@ -146,9 +148,11 @@ int main()
   while (running) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sf::Event event;
-    while (window->pollEvent(event))
+    while (window->pollEvent(event)) {
+      do_movement(cameraPos, cameraRight, cameraUp, cameraDirection);
       if (event.type == sf::Event::Closed)
         running = false;
+    }
     shader.Use();
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
@@ -162,10 +166,8 @@ int main()
     glUniform1i(glGetUniformLocation(shader.getProgram(), "uTexture2"), 1);
     glBindVertexArray(VAO);
     GLfloat radius = 10.0f;
-    GLfloat camX = (GLfloat)(sin(clock.getElapsedTime().asSeconds())) * radius;
-    GLfloat camZ = (GLfloat)(cos(clock.getElapsedTime().asSeconds())) * radius;
     glm::mat4 view;
-    view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+    view = glm::lookAt(cameraPos, cameraPos - cameraDirection, cameraUp);
     for(GLuint i = 0; i < 10; i++)
     {
       glm::mat4 model;
@@ -182,4 +184,18 @@ int main()
   }
   delete window;
   return 0;
+}
+
+void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront)
+{
+  // Camera controls
+  GLfloat cameraSpeed = 0.01f;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+    cameraPos -= cameraSpeed * cameraFront;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    cameraPos += cameraSpeed * cameraFront;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+  if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
