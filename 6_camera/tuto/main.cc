@@ -14,7 +14,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront);
+void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront, float delta);
 
 int main()
 {
@@ -149,7 +149,7 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sf::Event event;
     while (window->pollEvent(event)) {
-      do_movement(cameraPos, cameraRight, cameraUp, cameraDirection);
+      do_movement(cameraPos, cameraRight, cameraUp, cameraDirection, clock.getElapsedTime().asSeconds());
       if (event.type == sf::Event::Closed)
         running = false;
     }
@@ -181,15 +181,16 @@ int main()
     }
     glBindVertexArray(0);
     window->display();
+    clock.restart();
   }
   delete window;
   return 0;
 }
 
-void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront)
+void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront, float delta)
 {
   // Camera controls
-  GLfloat cameraSpeed = 0.01f;
+  GLfloat cameraSpeed = 50.0f * delta;
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
     cameraPos -= cameraSpeed * cameraFront;
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
