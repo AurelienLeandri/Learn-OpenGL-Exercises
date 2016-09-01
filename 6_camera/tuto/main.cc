@@ -15,6 +15,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront, float delta);
+void mouse_callback(sf::Window* window, double xpos, double ypos);
+void mouse_move(sf::Window* window);
+
+GLfloat lastX = 400, lastY = 300;
+GLfloat yaw = 0, pitch = 0;
+bool firstMouse = true;
 
 int main()
 {
@@ -153,6 +159,12 @@ int main()
       if (event.type == sf::Event::Closed)
         running = false;
     }
+    glm::vec3 front;
+    mouse_move(window);
+    front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+    front.y = sin(glm::radians(pitch));
+    front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+    cameraDirection = glm::normalize(front);
     shader.Use();
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
@@ -190,7 +202,7 @@ int main()
 void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& cameraUp, glm::vec3& cameraFront, float delta)
 {
   // Camera controls
-  GLfloat cameraSpeed = 50.0f * delta;
+  GLfloat cameraSpeed = 500.0f * delta;
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
     cameraPos -= cameraSpeed * cameraFront;
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
@@ -199,4 +211,32 @@ void do_movement(glm::vec3& cameraPos, glm::vec3& cameraRight, glm::vec3& camera
     cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
   if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
+void mouse_callback(sf::Window* window, double xpos, double ypos) {
+  if(firstMouse) // this bool variable is initially set to true
+  {
+    lastY = ypos;
+    lastX = xpos;
+    firstMouse = false;
+  }
+  GLfloat xoffset = xpos - lastX;
+  GLfloat yoffset = lastY - ypos; // Reversed since y-coordinates range from bottom to top
+  lastX = xpos;
+  lastY = ypos;
+  GLfloat sensitivity = 0.5f;
+  xoffset *= sensitivity;
+  yoffset *= sensitivity;
+  yaw   += xoffset;
+  pitch -= yoffset;
+  if(pitch > 89.0f)
+    pitch =  89.0f;
+  if(pitch < -89.0f)
+    pitch = -89.0f;
+  lastX = xpos;
+  lastY = ypos;
+}
+
+void mouse_move(sf::Window *window) {
+  mouse_callback(window, sf::Mouse::getPosition().x, sf::Mouse::getPosition().y);
 }
