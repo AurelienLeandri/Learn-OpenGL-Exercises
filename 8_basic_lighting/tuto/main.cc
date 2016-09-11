@@ -125,7 +125,9 @@ int main()
   // We create a vertex shader
   bool running = true;
   sf::Clock clock;
+  sf::Clock rotationClock;
   sf::Vector2f mousePosition(sf::Mouse::getPosition());
+  glm::vec3 lightPosBase = lightPos;
   while (running) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sf::Event event;
@@ -134,6 +136,8 @@ int main()
         running = false;
     updateCamera(camera, clock.getElapsedTime().asSeconds(), mousePosition);
     clock.restart();
+    lightPos.x = lightPosBase.x + glm::cos(rotationClock.getElapsedTime().asSeconds());
+    lightPos.y = lightPosBase.y + glm::sin(rotationClock.getElapsedTime().asSeconds());
     shader.Use();
     GLint lightPosLoc = glGetUniformLocation(shader.getProgram(), "lightPos");
     GLint objectColorLoc = glGetUniformLocation(shader.getProgram(), "objectColor");
