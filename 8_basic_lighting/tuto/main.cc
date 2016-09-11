@@ -147,6 +147,9 @@ int main()
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera.getViewMatrix()));
     GLint projLoc = glGetUniformLocation(shader.getProgram(), "projection");
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    GLint viewerLocPos = glGetUniformLocation(shader.getProgram(), "viewerPos");
+    glUniform3f(viewerLocPos, camera.getPosition().x, camera.getPosition().y,
+                camera.getPosition().z);
     glBindVertexArray(VAO); {
       glm::mat4 model;
       glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
