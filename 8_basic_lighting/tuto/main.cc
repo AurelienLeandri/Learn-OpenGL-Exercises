@@ -29,36 +29,37 @@ int main()
     std::cout << "Glew initialized successfully" << std::endl;
   // We create a VBO
   GLfloat vertices[] = {
-      0.5f, -0.5f, -0.5f,
-      0.5f,  0.5f, -0.5f,
-      -0.5f,  0.5f, -0.5f,
-      -0.5f, -0.5f, -0.5f,
+      0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
 
-      0.5f, -0.5f,  0.5f,
-      0.5f,  0.5f,  0.5f,
-      -0.5f,  0.5f,  0.5f,
-      -0.5f, -0.5f,  0.5f,
+      0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+      0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+      -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
 
-      -0.5f,  0.5f, -0.5f,
-      -0.5f, -0.5f, -0.5f,
-      -0.5f, -0.5f,  0.5f,
-      -0.5f,  0.5f,  0.5f,
+      -0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f,
 
-      0.5f,  0.5f, -0.5f,
-      0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f,  0.5f,
-      0.5f,  0.5f,  0.5f,
+      0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
 
-      0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f,  0.5f,
-      -0.5f, -0.5f,  0.5f,
-      -0.5f, -0.5f, -0.5f,
+      0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
 
-      0.5f,  0.5f, -0.5f,
-      0.5f,  0.5f,  0.5f,
-      -0.5f,  0.5f,  0.5f,
-      -0.5f,  0.5f, -0.5f,
+      0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
+      -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f
   };
+
   GLuint indices[] = {
       0, 1, 3,
       1, 2, 3,
@@ -100,9 +101,12 @@ int main()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
                  GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
-                          (GLvoid *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
+                          (GLvoid *)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
+                          (GLvoid *)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
   glBindVertexArray(0);
   GLuint lightVAO;
   glGenVertexArrays(1, &lightVAO);
@@ -114,8 +118,12 @@ int main()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
                  GL_STATIC_DRAW);
     // Set the vertex attributes (only position data for our lamp)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
+                          (GLvoid*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
+                          (GLvoid *)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
   glBindVertexArray(0);
   // We create a vertex shader
   bool running = true;
