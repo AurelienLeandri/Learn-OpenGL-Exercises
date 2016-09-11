@@ -79,7 +79,7 @@ int main()
   glm::mat4 view;
   glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
   Camera camera;
-// Note that we're translating the scene in the reverse direction of where we want to move
+  // Note that we're translating the scene in the reverse direction of where we want to move
   view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   glm::mat4 projection;
   projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -135,10 +135,12 @@ int main()
     updateCamera(camera, clock.getElapsedTime().asSeconds(), mousePosition);
     clock.restart();
     shader.Use();
+    GLint lightPosLoc = glGetUniformLocation(shader.getProgram(), "lightPos");
     GLint objectColorLoc = glGetUniformLocation(shader.getProgram(), "objectColor");
     GLint lightColorLoc  = glGetUniformLocation(shader.getProgram(), "lightColor");
     glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
     glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
+    glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
     GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");
