@@ -139,12 +139,30 @@ int main()
     lightPos.x = lightPosBase.x + glm::cos(rotationClock.getElapsedTime().asSeconds());
     lightPos.y = lightPosBase.y + glm::sin(rotationClock.getElapsedTime().asSeconds());
     shader.Use();
-    GLint lightPosLoc = glGetUniformLocation(shader.getProgram(), "lightPos");
+    GLint lightPosLoc = glGetUniformLocation(shader.getProgram(), "light.position");
     GLint objectColorLoc = glGetUniformLocation(shader.getProgram(), "objectColor");
-    GLint lightColorLoc  = glGetUniformLocation(shader.getProgram(), "lightColor");
     glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
-    glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
     glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+    GLint matAmbientLoc = glGetUniformLocation(shader.Program, "material.ambient");
+    GLint matDiffuseLoc = glGetUniformLocation(shader.Program, "material.diffuse");
+    GLint matSpecularLoc = glGetUniformLocation(shader.Program, "material.specular");
+    GLint matShineLoc    = glGetUniformLocation(shader.Program, "material.shininess");
+    glUniform3f(matAmbientLoc, 1.0f, 0.5f, 0.31f);
+    glUniform3f(matDiffuseLoc, 1.0f, 0.5f, 0.31f);
+    glUniform3f(matSpecularLoc, 0.5f, 0.5f, 0.5f);
+    glUniform1f(matShineLoc,    32.0f);
+    GLint lightAmbientLoc = glGetUniformLocation(shader.Program, "light.ambient");
+    GLint lightDiffuseLoc = glGetUniformLocation(shader.Program, "light.diffuse");
+    GLint lightSpecularLoc = glGetUniformLocation(shader.Program, "light.specular");
+    glm::vec3 lightColor;
+    lightColor.x = sin(rotationClock.getElapsedTime().asSeconds() * 2.0f);
+    lightColor.y = sin(rotationClock.getElapsedTime().asSeconds() * 0.7f);
+    lightColor.z = sin(rotationClock.getElapsedTime().asSeconds() * 1.3f);
+    glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // Decrease theinfluence
+    glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // Low influence
+    glUniform3f(lightAmbientLoc, ambientColor.x, ambientColor.y, ambientColor.z);
+    glUniform3f(lightDiffuseLoc, diffuseColor.x, diffuseColor.y, diffuseColor.z);
+    glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
     GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");
