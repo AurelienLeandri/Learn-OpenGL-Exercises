@@ -36,6 +36,6 @@ void main() {
     vec3 specLight = light.specular * (specConst * material.specular);
     float diffLight = max(dot(nNormal, nFragPos), 0.0f);
     vec3 diffuse = light.diffuse * (diffLight * material.diffuse);
-    vec3 light = diffLight + ambientLight + specLight;
+    vec3 light = diffuse + ambientLight + specLight;
     color = vec4(light * objectColor, 1.0f);
 }
