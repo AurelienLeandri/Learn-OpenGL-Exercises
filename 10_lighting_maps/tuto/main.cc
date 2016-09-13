@@ -98,6 +98,20 @@ int main()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   SOIL_free_image_data(image);
+  int width2, height2;
+  unsigned char *image2 = SOIL_load_image("../resources/textures/container2_specular.png",
+                                         &width2, &height2, 0, SOIL_LOAD_RGB);
+  if (!image2)
+    std::cerr << "Cannot load image" << std::endl;
+  GLuint texture2;
+  glGenTextures(1, &texture2);
+  glBindTexture(GL_TEXTURE_2D, texture2);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width2, height2, 0, GL_RGB,
+               GL_UNSIGNED_BYTE, image2);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  SOIL_free_image_data(image2);
   // VAO use
   GLuint VAO;
   glGenVertexArrays(1, &VAO);
@@ -147,11 +161,12 @@ int main()
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
     glUniform1i(glGetUniformLocation(shader.getProgram(), "material.diffuse"), 0);
+    glActiveTexture(GL_TEXTURE1); // activate texture unit 0
+    glBindTexture(GL_TEXTURE_2D, texture2); // so we can bind it
+    glUniform1i(glGetUniformLocation(shader.getProgram(), "material.specular"), 1);
     GLint lightPosLoc = glGetUniformLocation(shader.getProgram(), "light.position");
     glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
-    GLint matSpecularLoc = glGetUniformLocation(shader.Program, "material.specular");
     GLint matShineLoc    = glGetUniformLocation(shader.Program, "material.shininess");
-    glUniform3f(matSpecularLoc, 0.5f, 0.5f, 0.5f);
     glUniform1f(matShineLoc,    64.0f);
     GLint lightAmbientLoc = glGetUniformLocation(shader.Program, "light.ambient");
     GLint lightDiffuseLoc = glGetUniformLocation(shader.Program, "light.diffuse");
