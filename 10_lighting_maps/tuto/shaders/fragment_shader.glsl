@@ -7,10 +7,11 @@ uniform vec3 viewerPos;
 
 in vec3 fwd_normal;
 in vec3 fragPos;
+in TexCoords;
 
 struct Material {
     vec3 ambient;
-    vec3 diffuse;
+    sampler2D diffuse;
     vec3 specular;
     float shininess;
 };
@@ -35,7 +36,7 @@ void main() {
     float specConst = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specLight = light.specular * (specConst * material.specular);
     float diffLight = max(dot(nNormal, nFragPos), 0.0f);
-    vec3 diffuse = light.diffuse * (diffLight * material.diffuse);
+    vec3 diffuse = light.diffuse * (diffLight * vec3(texture(material.diffuse, TexCoords)));
     vec3 light = diffLight + ambientLight + specLight;
     color = vec4(light * objectColor, 1.0f);
 }
