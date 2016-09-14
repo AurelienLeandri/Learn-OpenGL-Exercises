@@ -28,14 +28,17 @@ uniform Light light;
 
 void main() {
     vec3 ambientLight = light.ambient * vec3(texture(material.diffuse, TexCoords));
+
     vec3 nNormal = normalize(fwd_normal);
-    vec3 nFragPos = normalize(light.position - fragPos);
+    vec3 lightDir = normalize(-light.position);
+    float diffLight = max(dot(nNormal, lightDir), 0.0f);
+    vec3 diffuse = light.diffuse * (diffLight * vec3(texture(material.diffuse, TexCoords)));
+
     vec3 viewDir = normalize(viewerPos - fragPos);
-    vec3 reflectDir = reflect(-nFragPos, nNormal);
+    vec3 reflectDir = reflect(-lightDir, nNormal);
     float specConst = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specLight = light.specular * (specConst * vec3(texture(material.specular, TexCoords)));
-    float diffLight = max(dot(nNormal, nFragPos), 0.0f);
-    vec3 diffuse = light.diffuse * (diffLight * vec3(texture(material.diffuse, TexCoords)));
+
     vec3 light = diffuse + ambientLight + specLight;
     color = vec4(light, 1.0f);
 }

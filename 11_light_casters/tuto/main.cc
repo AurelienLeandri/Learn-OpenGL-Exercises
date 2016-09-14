@@ -71,19 +71,25 @@ int main()
       -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
   };
+  glm::vec3 cubePositions[] = {
+      glm::vec3( 0.0f,  0.0f,  0.0f),
+      glm::vec3( 2.0f,  5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f),
+      glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3( 2.4f, -0.4f, -3.5f),
+      glm::vec3(-1.7f,  3.0f, -7.5f),
+      glm::vec3( 1.3f, -2.0f, -2.5f),
+      glm::vec3( 1.5f,  2.0f, -2.5f),
+      glm::vec3( 1.5f,  0.2f, -1.5f),
+      glm::vec3(-1.3f,  1.0f, -1.5f)
+  };
   glm::mat4 model;
-  glm::mat4 lightModel;
   glm::mat4 view;
-  glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
   Camera camera;
-  // Note that we're translating the scene in the reverse direction of where we want to move
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
   glm::mat4 projection;
   projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
   Shader shader("tuto/shaders/vertex_shader.glsl",
                 "tuto/shaders/fragment_shader.glsl");
-  Shader lightShader("tuto/shaders/light_vertex_shader.glsl",
-                "tuto/shaders/light_fragment_shader.glsl");
   int width, height;
   unsigned char *image = SOIL_load_image("../resources/textures/container2.png",
                                          &width, &height, 0, SOIL_LOAD_RGB);
@@ -131,22 +137,10 @@ int main()
                           (GLvoid *)(6 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
   glBindVertexArray(0);
-  GLuint lightVAO;
-  glGenVertexArrays(1, &lightVAO);
-  glBindVertexArray(lightVAO);
-    // We only need to bind to the VBO, the container's VBO's data already contains the correct data.
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // Set the vertex attributes (only position data for our lamp)
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
-                          (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-  glBindVertexArray(0);
   // We create a vertex shader
   bool running = true;
   sf::Clock clock;
-  sf::Clock rotationClock;
   sf::Vector2f mousePosition(sf::Mouse::getPosition());
-  glm::vec3 lightPosBase = lightPos;
   while (running) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sf::Event event;
@@ -155,8 +149,6 @@ int main()
         running = false;
     updateCamera(camera, clock.getElapsedTime().asSeconds(), mousePosition);
     clock.restart();
-    lightPos.x = lightPosBase.x + glm::cos(rotationClock.getElapsedTime().asSeconds());
-    lightPos.y = lightPosBase.y + glm::sin(rotationClock.getElapsedTime().asSeconds());
     shader.Use();
     glActiveTexture(GL_TEXTURE0); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture); // so we can bind it
@@ -165,7 +157,7 @@ int main()
     glBindTexture(GL_TEXTURE_2D, texture2); // so we can bind it
     glUniform1i(glGetUniformLocation(shader.getProgram(), "material.specular"), 1);
     GLint lightPosLoc = glGetUniformLocation(shader.getProgram(), "light.position");
-    glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+    glUniform3f(lightPosLoc, -0.2f, -1.0f, -0.3f);
     GLint matShineLoc    = glGetUniformLocation(shader.Program, "material.shininess");
     glUniform1f(matShineLoc,    64.0f);
     GLint lightAmbientLoc = glGetUniformLocation(shader.Program, "light.ambient");
@@ -183,26 +175,15 @@ int main()
     GLint viewerLocPos = glGetUniformLocation(shader.getProgram(), "viewerPos");
     glUniform3f(viewerLocPos, camera.getPosition().x, camera.getPosition().y,
                 camera.getPosition().z);
-    glBindVertexArray(VAO); {
+    glBindVertexArray(VAO);
+    for(GLuint i = 0; i < 10; i++) {
       glm::mat4 model;
+      model = glm::translate(model, cubePositions[i]);
+      GLfloat angle = 20.0f * i;
+      model = glm::rotate(model, glm::radians(angle * 100), glm::vec3(1.0f, 0.3f, 0.5f));
       glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-    glBindVertexArray(0);
-    lightShader.Use();
-// Set the lightModel, view and projection matrix uniforms
-    GLint lightModelLoc = glGetUniformLocation(lightShader.getProgram(), "model");
-    glUniformMatrix4fv(lightModelLoc, 1, GL_FALSE, glm::value_ptr(lightModel));
-    GLint lightViewLoc = glGetUniformLocation(lightShader.getProgram(), "view");
-    glUniformMatrix4fv(lightViewLoc, 1, GL_FALSE, glm::value_ptr(camera.getViewMatrix()));
-    GLint lightProjLoc = glGetUniformLocation(lightShader.getProgram(), "projection");
-    glUniformMatrix4fv(lightProjLoc, 1, GL_FALSE, glm::value_ptr(projection));
-// Draw the lamp object
-    lightModel = glm::mat4();
-    lightModel = glm::translate(lightModel, lightPos);
-    lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-    glBindVertexArray(lightVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     window->display();
   }
