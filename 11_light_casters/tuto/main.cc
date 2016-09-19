@@ -156,8 +156,6 @@ int main()
     glActiveTexture(GL_TEXTURE1); // activate texture unit 0
     glBindTexture(GL_TEXTURE_2D, texture2); // so we can bind it
     glUniform1i(glGetUniformLocation(shader.getProgram(), "material.specular"), 1);
-    GLint lightPosLoc = glGetUniformLocation(shader.getProgram(), "light.position");
-    glUniform3f(lightPosLoc, -0.2f, -1.0f, -0.3f);
     GLint matShineLoc    = glGetUniformLocation(shader.Program, "material.shininess");
     glUniform1f(matShineLoc,    64.0f);
     GLint lightAmbientLoc = glGetUniformLocation(shader.Program, "light.ambient");
@@ -169,6 +167,12 @@ int main()
     glUniform1f(glGetUniformLocation(shader.Program, "light.constant"),  1.0f);
     glUniform1f(glGetUniformLocation(shader.Program, "light.linear"),    0.09);
     glUniform1f(glGetUniformLocation(shader.Program, "light.quadratic"), 0.032);
+    glUniform3f(glGetUniformLocation(shader.Program, "light.position"),
+                camera.getPosition().x, camera.getPosition().y, camera.getPosition().z);
+    glUniform3f(glGetUniformLocation(shader.Program, "light.direction"),
+                camera.getFront().x, camera.getFront().y, camera.getFront().z);
+    glUniform1f(glGetUniformLocation(shader.Program, "light.cutOff"),
+                glm::cos(glm::radians(12.5f)));
     GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");

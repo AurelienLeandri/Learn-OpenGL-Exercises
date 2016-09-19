@@ -22,14 +22,23 @@ vec3 position;
 vec3 ambient;
 vec3 diffuse;
 vec3 specular;
+
 float constant;
 float linear;
 float quadratic;
+
+vec3 direction;
+float cutOff;
+float outerCutOff;
 };
 
 uniform Light light;
 
 void main() {
+    vec3 lightDir = normalize(light.position - fragPos);
+    float theta = dot(lightDir, normalize(-light.direction));
+    float epsilon   = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
     float distance    = length(light.position - fragPos);
     float attenuation = 1.0f / (light.constant + light.linear * distance +
         		    light.quadratic * (distance * distance));
@@ -37,7 +46,6 @@ void main() {
     vec3 ambientLight = light.ambient * vec3(texture(material.diffuse, TexCoords));
 
     vec3 nNormal = normalize(fwd_normal);
-    vec3 lightDir = normalize(-light.position);
     float diffLight = max(dot(nNormal, lightDir), 0.0f);
     vec3 diffuse = light.diffuse * (diffLight * vec3(texture(material.diffuse, TexCoords)));
 
@@ -46,6 +54,8 @@ void main() {
     float specConst = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specLight = light.specular * (specConst * vec3(texture(material.specular, TexCoords)));
 
+    diffuse *= intensity;
+    specLight *= intensity;
     ambientLight *= attenuation;
     diffuse *= attenuation;
     specLight *= attenuation;
