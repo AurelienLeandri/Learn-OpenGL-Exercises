@@ -166,6 +166,9 @@ int main()
     glUniform3f(lightAmbientLoc, 0.2f, 0.2f, 0.2f);
     glUniform3f(lightDiffuseLoc, 0.5f, 0.5f, 0.5f);
     glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
+    glUniform1f(glGetUniformLocation(shader.Program, "light.constant"),  1.0f);
+    glUniform1f(glGetUniformLocation(shader.Program, "light.linear"),    0.09);
+    glUniform1f(glGetUniformLocation(shader.Program, "light.quadratic"), 0.032);
     GLint modelLoc = glGetUniformLocation(shader.getProgram(), "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
     GLint viewLoc = glGetUniformLocation(shader.getProgram(), "view");

@@ -22,11 +22,18 @@ vec3 position;
 vec3 ambient;
 vec3 diffuse;
 vec3 specular;
+float constant;
+float linear;
+float quadratic;
 };
 
 uniform Light light;
 
 void main() {
+    float distance    = length(light.position - fragPos);
+    float attenuation = 1.0f / (light.constant + light.linear * distance +
+        		    light.quadratic * (distance * distance));
+
     vec3 ambientLight = light.ambient * vec3(texture(material.diffuse, TexCoords));
 
     vec3 nNormal = normalize(fwd_normal);
@@ -39,6 +46,9 @@ void main() {
     float specConst = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specLight = light.specular * (specConst * vec3(texture(material.specular, TexCoords)));
 
+    ambientLight *= attenuation;
+    diffuse *= attenuation;
+    specLight *= attenuation;
     vec3 light = diffuse + ambientLight + specLight;
     color = vec4(light, 1.0f);
 }
