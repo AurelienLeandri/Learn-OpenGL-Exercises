@@ -5,7 +5,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/8_basic_lighting)
 
 set(UTILS_SOURCE_FILES ../utils/file_reader.cc ../utils/file_reader.hh
         ../utils/shader_compiler.cc ../utils/shader_compiler.hh ../utils/shader.cc ../utils/shader.hh ../utils/camera.hh ../utils/camera.cc)
-set(TUTO_SOURCE_FILES tuto/main.cc)
+set(TUTO_SOURCE_FILES tuto/main.cc ../utils/model/mesh.cc ../utils/model/mesh.hh)
 
 add_executable(basic_lighting ${TUTO_SOURCE_FILES} ${UTILS_SOURCE_FILES})
 
