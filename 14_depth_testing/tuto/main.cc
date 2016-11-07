@@ -29,10 +29,10 @@ int main() {
 
   // Setup some OpenGL options
   glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_ALWAYS); // Set to always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
+  glDepthFunc(GL_LESS); // Set to always pass the depth test (same effect as glDisable(GL_DEPTH_TEST))
 
   // Setup and compile our shaders
-  Shader shader("../../../Path/To/Shaders/advanced.vs", "../../../Path/To/Shaders/advanced.frag");
+  Shader shader("tuto/shaders/advanced.vs.glsl", "tuto/shaders/advanced.frag.glsl");
 
 #pragma region "object_initialization"
   // Set the object data (buffers, vertex attributes)
