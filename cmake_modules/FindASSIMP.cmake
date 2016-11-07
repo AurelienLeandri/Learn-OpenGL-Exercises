@@ -56,12 +56,16 @@ else(WIN32)
             assimp_INCLUDE_DIRS
             NAMES postprocess.h scene.h version.h config.h cimport.h
             PATHS /usr/local/include/
+            /usr/local
+            /usr
     )
 
     find_library(
             assimp_LIBRARIES
             NAMES assimp
             PATHS /usr/local/lib/
+            /usr/local
+            /usr
     )
 
     if (assimp_INCLUDE_DIRS AND assimp_LIBRARIES)

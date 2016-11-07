@@ -28,7 +28,7 @@ if (!SOIL_FOUND)
 endif()
 include_directories(${SOIL_INCLUDE_DIRS})
 
-find_package(ASSIMP REQUIRED)
+find_package(assimp REQUIRED)
 if (!ASSIMP_FOUND)
     MESSAGE("ASSIMP NOT FOUND")
 endif()
