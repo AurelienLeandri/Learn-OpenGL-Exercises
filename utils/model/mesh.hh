@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <shader.hh>
+#include <assimp/types.h>
 
 namespace model {
   struct Vertex {
@@ -22,23 +23,23 @@ namespace model {
   struct Texture {
     GLuint id;
     std::string type;
+    aiString path;
   };
 
   class Mesh {
     public:
-    /*  Mesh Data  */
-    std::vector<Vertex> vertices;
-    std::vector<GLuint> indices;
-    std::vector<Texture> textures;
-    /*  Functions  */
-    Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices,
-         std::vector<Texture> textures);
-    void Draw(Shader shader);
+      Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices,
+           std::vector<Texture> textures);
+      void Draw(Shader shader);
+
     private:
-    /*  Render data  */
-    GLuint VAO, VBO, EBO;
-    /*  Functions    */
-    void setupMesh();
+      void setupMesh();
+      std::vector<Vertex> vertices;
+      std::vector<GLuint> indices;
+      std::vector<Texture> textures;
+      GLuint VAO;
+      GLuint VBO;
+      GLuint EBO;
   };
 
 }
