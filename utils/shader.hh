@@ -20,8 +20,7 @@ class Shader {
     Shader(const GLchar *vertexSourcePath, const GLchar *fragmentSourcePath);
     void Use();
     GLuint &getProgram();
-  private:
-    void compileShader(GLuint &shader, const GLchar *shaderCode, GLint shaderType);
+    static void compileShader(GLuint &shader, const GLchar *shaderCode, GLint shaderType);
 };
 
 
